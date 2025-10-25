@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -126,7 +128,7 @@ fun InventureItem(inventure: Inventure, onDelete: () -> Unit) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun InventureApp() {
+fun InventureApp(onAddProduct: (Inventure) -> Unit) {
     var name by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
@@ -188,4 +190,18 @@ fun InventureApp() {
             )
         }
     }
+}
+
+@Composable
+fun viewItemScreen(products: List<Inventure>) {
+    Column(
+        modifier = Modifier.padding(16.dp)
+    ) {
+        Text("All Products", style =MaterialTheme.typography.headlineMedium)
+        if(products.isEmpty())
+            Text("No products added yet")
+        else LazyColumn { items(products) {InventureItem(it, onDelete = ) } }
+
+    }
+
 }
