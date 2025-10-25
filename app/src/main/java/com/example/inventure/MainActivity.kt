@@ -11,37 +11,35 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.room.Room
 import com.example.inventure.ui.theme.InventureTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val db = Room.databaseBuilder(
+            applicationContext,
+            InventureDatabase::class.java,
+            "note_db"
+        ).build()
+
+        val repository = InventureRepository(db.inventureDao())
+        val viewModelFactory = InventureViewModelFactory(repository)
+
         setContent {
-            InventureTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            val inventureViewModel: InventureViewModel = viewModel(factory = viewModelFactory)
+            InventureApp(inventureViewModel)
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    InventureTheme {
-        Greeting("Android")
-    }
+    InventureApp()
 }
